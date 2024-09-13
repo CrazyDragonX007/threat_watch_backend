@@ -5,7 +5,10 @@ const  Article  = require('../models/article');
 const router = require('express').Router();
 
 router.get('/get',(req,res)=>{
-    Article.find().limit(100).then(articles=>{
+    const page = req.query.page || 1;
+    const pageSize = req.query.page_size || 100;
+    const skip = (page-1)*pageSize;
+    Article.find().sort({publishedDate:-1}).skip(skip).limit(pageSize).then(articles=>{
         res.json(articles);
     }).catch(err=>{res.status(400).json(err);});
 })
@@ -13,6 +16,31 @@ router.get('/get_all', async (req, res) => {
     const articles = await Article.find();
     res.json(articles);
 });
+
+router.get('/critical',async (req,res)=>{
+    const page = req.query.page || 1;
+    const pageSize = req.query.page_size || 10;
+    const from = 'yesterday';
+    const to = 'now';
+    const sortBy = 'rank';
+    const articles = await getArticles(page,pageSize,from,to,sortBy);
+    const response=[];
+    articles?.forEach(article=> {
+        const articleObj = {};
+        articleObj.title = article.title;
+        articleObj.source = article.clean_url;
+        articleObj.summary = article.summary;
+        articleObj.url = article.link;
+        articleObj.media = article.media;
+        articleObj.publishedDate = article.published_date;
+        articleObj.author = article.author;
+        articleObj.country = article.country;
+        articleObj.language = article.language;
+        articleObj.description = article.excerpt;
+        response.push(articleObj);
+    });
+    res.json(response);
+})
 
 // router.get('/search')
 

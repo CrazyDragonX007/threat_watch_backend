@@ -56,7 +56,7 @@ const sources =  [
     "linuxsecurity.com",
 ]
 
-const getArticles = async (page,pageSize) => {
+const getArticles = async (page,pageSize,from,to,sortBy) => {
     const options = {
         method: 'GET',
         url: 'https://api.newscatcherapi.com/v2/search',
@@ -72,15 +72,21 @@ const getArticles = async (page,pageSize) => {
             'x-api-key': newscatcher_api_key
         }
     };
+    if(from){
+        options.params['from'] = from;
+        options.params['to'] = to;
+    }
+    if(sortBy){
+        options.params['sort_by'] = sortBy;
+    }
     try {
         return await axios.request(options).then(function (response) {
-            console.log(response?.data);
+            // console.log(response?.data);
             return response?.data?.articles;
         });
     } catch (error) {
         console.error(error);
     }
-
 }
 
 module.exports = {getArticles};

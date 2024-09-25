@@ -11,7 +11,6 @@ const getArticles = async (page,pageSize,from,to,sortBy) => {
             topic: 'tech',
             page: page,
             page_size:pageSize,
-            // sources: sources.toString()
         },
         headers: {
             'x-api-key': newscatcher_api_key
@@ -26,7 +25,6 @@ const getArticles = async (page,pageSize,from,to,sortBy) => {
     }
     try {
         return await axios.request(options).then(function (response) {
-            console.log(response?.data);
             return response?.data;
         });
     } catch (error) {

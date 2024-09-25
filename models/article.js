@@ -10,7 +10,8 @@ const articleSchema = new mongoose.Schema({
     media:{type:String},
     publishedDate:{type:Date},
     country:{type:String},
-    language:{type:String}
+    language:{type:String},
+    relevance_score:{type:Number},
 });
 
 module.exports = mongoose.model('Article',articleSchema);

@@ -42,6 +42,7 @@ router.get('/newsapi', async (req, res) => {
 
 router.get('/newscatcher', async (req, res) => {
     const page = req.query.page || 1;
+    console.log(page);
     const pageSize = req.query.page_size || 100;
     const from = req.query.from || 'yesterday';
     const to = req.query.to || 'now';
@@ -64,7 +65,7 @@ router.get('/newscatcher', async (req, res) => {
         articleObj.language = article.language;
         articleObj.description = article.excerpt;
         articleObj.relevance_score = article._score;
-        Article.create(articleObj).then(res=>console.log(res)).catch(err=>console.log(err));
+        // Article.create(articleObj).then(res=>console.log(res)).catch(err=>console.log(err));
     });
     res.json(data);
 });

@@ -19,7 +19,7 @@ router.get('/get_all', async (req, res) => {
 
 router.get('/latest', (req,res)=>{
     const page = req.query.page || 1;
-    const pageSize = req.query.page_size || 10;
+    const pageSize = req.query.page_size || 100;
     const skip = (page-1)*pageSize;
     Article.find().sort({publishedDate:-1}).skip(skip).limit(pageSize).then(articles=>{
         res.json(articles);
@@ -36,7 +36,7 @@ router.get('/newsapi', async (req, res) => {
     const articles = await getCyberSecurityNews();
     articles.forEach(article=>{
         Article.create(article).then(res=>console.log(res)).catch(err=>console.log(err));
-    })
+    });
     res.json({message: "Articles successfully added to database"});
 });
 

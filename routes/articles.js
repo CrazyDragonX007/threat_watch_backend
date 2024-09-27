@@ -25,8 +25,8 @@ router.get('/latest', (req,res)=>{
     }).catch(err=>{res.status(400).json(err);});
 })
 
-router.get('/get/:id',(req,res)=>{
-    Article.findById(req.params.id).then(article=>{
+router.get('/get_one',(req,res)=>{
+    Article.findById(req.query.id).then(article=>{
         res.json(article);
     }).catch(err=>{res.status(400).json(err);});
 })

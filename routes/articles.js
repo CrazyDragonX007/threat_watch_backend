@@ -5,10 +5,9 @@ const router = require('express').Router();
 
 router.get('/get',(req,res)=>{
     const page = req.query.page || 1;
-    const pageSize = req.query.page_size || 10;
+    const pageSize = req.query.page_size || 100;
     const skip = (page-1)*pageSize;
     Article.find().sort({relevance_score:-1}).skip(skip).limit(pageSize).then(articles=>{
-        console.log(articles);
         res.json(articles);
     }).catch(err=>{res.status(400).json(err);});
 })

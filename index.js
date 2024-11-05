@@ -12,6 +12,11 @@ app.use(logger('dev'));
 app.use(cors());
 db();
 
+app.use('/', (req,res)=>{
+    res.send("Welcome to Cybersecurity News API");
+});
 app.use('/articles', articlesRouter);
 
 app.listen(port, () => console.log(`Server Connected`))
+
+export default app;

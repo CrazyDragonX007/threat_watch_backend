@@ -7,13 +7,32 @@ router.get('/get',(req,res)=>{
     const page = req.query.page || 1;
     const pageSize = req.query.page_size || 100;
     const skip = (page-1)*pageSize;
-    Article.find().sort({relevance_score:-1}).skip(skip).limit(pageSize).then(articles=>{
+    Article.find().sort({publishedDate:-1}).skip(skip).limit(pageSize).then(articles=>{
         res.json(articles);
     }).catch(err=>{res.status(400).json(err);});
-})
+});
+
 router.get('/get_all', async (req, res) => {
     const articles = await Article.find();
     res.json(articles);
+});
+
+router.get('/search', async (req, res) => {
+    try {
+        const page = parseInt(req.query.page) || 1;
+        const pageSize = parseInt(req.query.page_size) || 100;
+        const skip = (page - 1) * pageSize;
+        const query = req.query.q;
+
+        if (!query) {return res.status(400).json({ message: "Query parameter 'q' is required." });}
+
+        const regex = new RegExp(query, "i"); // "i" makes the search case-insensitive
+        const articles = await Article.find({$or: [{ title: { $regex: regex } }, { description: { $regex: regex } }]}).skip(skip).limit(pageSize);
+        res.json(articles);
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: "An error occurred while searching." });
+    }
 });
 
 router.get('/latest', (req,res)=>{
@@ -23,13 +42,13 @@ router.get('/latest', (req,res)=>{
     Article.find().sort({publishedDate:-1}).skip(skip).limit(pageSize).then(articles=>{
         res.json(articles);
     }).catch(err=>{res.status(400).json(err);});
-})
+});
 
 router.get('/get_one',(req,res)=>{
     Article.findById(req.query.id).then(article=>{
         res.json(article);
     }).catch(err=>{res.status(400).json(err);});
-})
+});
 
 router.get('/newsapi', async (req, res) => {
     const articles = await getCyberSecurityNews();
